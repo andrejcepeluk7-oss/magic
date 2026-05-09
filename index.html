@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Гримуар: Магический Конструктор</title>
 <style>
-    /* Базовые настройки */
     body { 
         font-family: "Comic Sans MS", "Comic Sans", cursive; 
         background: #1a1b1e; 
@@ -25,11 +24,20 @@
         padding-top: 10px; 
     }
     
-    /* Стили элементов управления */
+    .rune-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: #25262b;
+        padding: 8px;
+        border-radius: 14px;
+        border: 1px solid #3c4043;
+    }
+
     select, .fixed-rune { 
         font-family: "Comic Sans MS", cursive;
-        padding: 15px; 
-        border-radius: 12px; 
+        padding: 12px; 
+        border-radius: 10px; 
         border: 1px solid #3c4043; 
         background: #303134; 
         color: white; 
@@ -40,16 +48,22 @@
         -webkit-appearance: none; 
     }
     
-    .fixed-rune { 
-        background: #202124; 
-        color: #e8eaed; 
-        border: 1px solid #4a4d52; 
-        font-weight: bold; 
-        text-align: center; 
-        cursor: default;
+    .fixed-rune { background: #1a1b1e; border: 1px solid #4a4d52; text-align: center; }
+
+    .sub-input {
+        font-family: "Comic Sans MS", cursive;
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #3c4043;
+        background: #202124;
+        color: #e8eaed;
+        font-size: 13px;
+        box-sizing: border-box;
+        outline: none;
+        display: none; /* Скрыто по умолчанию */
     }
 
-    /* Поле ввода названия */
     .result-box { 
         padding: 15px; 
         border-radius: 14px; 
@@ -58,7 +72,7 @@
         text-align: center; 
     }
     
-    input[type="text"] { 
+    input[id="nameInput"] { 
         font-family: "Comic Sans MS", cursive;
         width: 100%; 
         padding: 12px; 
@@ -73,127 +87,102 @@
         box-sizing: border-box;
     }
 
-    input[type="text"]::placeholder {
-        color: #5f6368;
-    }
-
-    /* Кнопки */
     .btn-row { display: flex; gap: 10px; align-items: center; }
     .save-btn { 
         font-family: "Comic Sans MS", cursive; 
-        flex: 1; 
-        padding: 16px; 
-        border-radius: 12px; 
-        border: none; 
-        background: #3a3d42; 
-        color: white; 
-        font-weight: bold; 
-        cursor: pointer; 
-        font-size: 16px;
-        transition: 0.2s;
+        flex: 1; padding: 16px; border-radius: 12px; border: none; 
+        background: #3a3d42; color: white; font-weight: bold; cursor: pointer; 
+        font-size: 16px; transition: 0.2s;
     }
-    .save-btn:active { transform: scale(0.98); background: #4a4d52; }
-    .save-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+    .save-btn:disabled { opacity: 0.2; }
     
-    .trash-btn { 
-        background: none; 
-        border: none; 
-        font-size: 32px; 
-        cursor: pointer; 
-        filter: grayscale(1); 
-        padding: 5px;
-    }
+    .trash-btn { background: none; border: none; font-size: 32px; cursor: pointer; filter: grayscale(1); padding: 5px; }
 
-    /* Выдвижные секции */
     details { background: #202124; border-radius: 14px; border: 1px solid #3c4043; overflow: hidden; }
     summary { 
-        padding: 14px; 
-        cursor: pointer; 
-        font-weight: bold; 
-        text-align: center; 
-        list-style: none; 
-        outline: none; 
-        background: #2d2f33;
-        text-transform: uppercase;
-        font-size: 14px;
-        letter-spacing: 2px;
-        color: #9aa0a6;
+        padding: 14px; cursor: pointer; font-weight: bold; text-align: center; 
+        list-style: none; background: #2d2f33; text-transform: uppercase;
+        font-size: 13px; letter-spacing: 2px; color: #9aa0a6;
     }
     
-    .info-content, .list-content { padding: 15px; font-size: 14px; border-top: 1px solid #3c4043; line-height: 1.5; }
+    .list-content, .info-content { padding: 15px; border-top: 1px solid #3c4043; }
 
-    /* Список заклинаний */
-    .spell-item { 
-        margin-bottom: 10px; 
-        padding-bottom: 10px; 
-        border-bottom: 1px solid #3c4043; 
-    }
+    .spell-item { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #3c4043; }
     .spell-name { color: #ffffff; font-size: 17px; font-weight: bold; display: block; }
-    .spell-recipe { color: #9aa0a6; font-size: 12px; display: block; margin-top: 3px; font-style: italic; }
+    .spell-recipe { color: #9aa0a6; font-size: 12px; display: block; margin-top: 4px; line-height: 1.4; font-style: italic; }
+    .rune-detail { color: #9aa0a6; font-style: normal; font-weight: normal; }
 
-    .info-content div { margin-bottom: 12px; border-bottom: 1px solid #2d2f33; padding-bottom: 8px; }
-    .info-content div:last-child { margin-bottom: 0; border-bottom: none; }
-    
-    @media (max-width: 400px) {
-        body { padding: 8px; }
-        select, .fixed-rune, .save-btn { padding: 12px; font-size: 14px; }
-    }
+    .info-content div { margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid #2d2f33; padding-bottom: 5px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <select id="s1"></select>
-    <div class="fixed-rune">форма</div>
-    <select id="s3"></select>
-    <select id="s4"></select>
-    <select id="s5"></select>
+    <div class="rune-group">
+        <select id="s1" onchange="toggleSub(this, 'sub1')"></select>
+        <input type="text" id="sub1" class="sub-input" placeholder="Суть истока (если выбрана Стихия)...">
+    </div>
+
+    <div class="rune-group">
+        <div class="fixed-rune">форма</div>
+        <input type="text" id="sub_f" class="sub-input" style="display:block" placeholder="Описание формы...">
+    </div>
+
+    <div class="rune-group">
+        <select id="s3" onchange="toggleSub(this, 'sub3')"></select>
+        <input type="text" id="sub3" class="sub-input" placeholder="Свойство основы...">
+    </div>
+
+    <div class="rune-group">
+        <select id="s4" onchange="toggleSub(this, 'sub4')"></select>
+        <input type="text" id="sub4" class="sub-input" placeholder="Свойство основы...">
+    </div>
+
+    <div class="rune-group">
+        <select id="s5" onchange="toggleSub(this, 'sub5')"></select>
+        <input type="text" id="sub5" class="sub-input" placeholder="Свойство основы...">
+    </div>
 
     <div class="result-box">
-        <input type="text" id="nameInput" placeholder="Назовите заклинание..." autocomplete="off">
+        <input type="text" id="nameInput" placeholder="Название заклинания..." autocomplete="off">
     </div>
 
     <div class="btn-row">
-        <button id="saveBtn" class="save-btn" onclick="save()">Сохранить формулу</button>
+        <button id="saveBtn" class="save-btn" onclick="save()">Записать в Гримуар</button>
         <button class="trash-btn" onclick="clearAll()">🗑️</button>
     </div>
 
-    <div class="discovered">
-        <!-- Атрибут open удален, чтобы Гримуар был закрыт изначально -->
-        <details>
-            <summary>Гримуар</summary>
-            <div id="list" class="list-content"></div>
-        </details>
-    </div>
+    <details>
+        <summary>Гримуар</summary>
+        <div id="list" class="list-content"></div>
+    </details>
 
-    <div class="handbook">
-        <details>
-            <summary>Справочник основ</summary>
-            <div class="info-content">
-                <div><strong>Форма:</strong> определяет структуру и вид заклинания.</div>
-                <div><strong>Движение:</strong> задаёт вектор и путь перемещения магии.</div>
-                <div><strong>Мощность:</strong> отвечает за силу и интенсивность воздействия.</div>
-                <div><strong>Температура:</strong> регулирует тепловые свойства объекта.</div>
-                <div><strong>Состояние:</strong> определяет форму материи (твердая, жидкая, газ).</div>
-                <div><strong>Создание:</strong> катализатор воплощения объектов или процессов.</div>
-                <div><strong>Стихия:</strong> универсальный заменитель или комбинатор стихий.</div>
-            </div>
-        </details>
-    </div>
+    <details>
+        <summary>Справочник основ</summary>
+        <div class="info-content">
+            <div><strong>Форма:</strong> структура и вид заклинания.</div>
+            <div><strong>Движение:</strong> вектор и путь перемещения.</div>
+            <div><strong>Мощность:</strong> сила воздействия.</div>
+            <div><strong>Температура:</strong> тепловые свойства.</div>
+            <div><strong>Состояние:</strong> твердое, жидкое или газ.</div>
+            <div><strong>Создание:</strong> катализатор воплощения.</div>
+            <div><strong>Стихия:</strong> универсальный комбинатор.</div>
+        </div>
+    </details>
 </div>
 
 <script>
 const essences = ["огонь", "вода", "воздух", "Земля", "металл", "яд", "молния"].sort();
 const bases = ["движение", "мощность", "температура", "состояние", "создание", "стихия"].sort();
 
-function fillCategorizedOptions(sel, placeholder, essenceList, baseList) {
+function fillOptions(sel, placeholder, essenceList, baseList) {
     let html = `<option value="">${placeholder}</option>`;
-    if (essenceList?.length) {
+    if (essenceList) {
         html += `<optgroup label="Стихии">`;
         essenceList.forEach(item => html += `<option value="${item}">${item}</option>`);
         html += `</optgroup>`;
     }
-    if (baseList?.length) {
+    if (baseList) {
         html += `<optgroup label="Основы">`;
         baseList.forEach(item => html += `<option value="${item}">${item}</option>`);
         html += `</optgroup>`;
@@ -201,53 +190,74 @@ function fillCategorizedOptions(sel, placeholder, essenceList, baseList) {
     sel.innerHTML = html;
 }
 
-fillCategorizedOptions(s1, "Выберите исток", essences, ["стихия"]); 
-fillCategorizedOptions(s3, "добавить руну", essences, bases);
-fillCategorizedOptions(s4, "добавить руну", essences, bases);
-fillCategorizedOptions(s5, "добавить руну", essences, bases);
-
-let spells = JSON.parse(localStorage.getItem('grimoire_mobile_v13') || '{}');
-
-function getRecipeKey() {
-    if (!s1.value) return null;
-    let parts = [s1.value, "форма"];
-    if (s3.value) parts.push(s3.value);
-    if (s4.value) parts.push(s4.value);
-    if (s5.value) parts.push(s5.value);
-    return parts.join(" + ");
+// ЛОГИКА: Поле появляется только если выбрана руна из списка 'bases' (Основы + общая Стихия)
+function toggleSub(sel, subId) {
+    const sub = document.getElementById(subId);
+    const val = sel.value;
+    
+    // Проверяем, входит ли значение в список основ
+    if (val && bases.includes(val)) {
+        sub.style.display = "block";
+    } else {
+        sub.style.display = "none";
+        sub.value = "";
+    }
+    update();
 }
 
-function update() {
-    let key = getRecipeKey();
-    saveBtn.disabled = !key;
-    if (key && spells[key]) nameInput.value = spells[key];
-}
+fillOptions(s1, "Выберите исток", essences, ["стихия"]); 
+fillOptions(s3, "(пусто)", essences, bases);
+fillOptions(s4, "(пусто)", essences, bases);
+fillOptions(s5, "(пусто)", essences, bases);
 
-[s1, s3, s4, s5].forEach(s => s.onchange = update);
+let spells = JSON.parse(localStorage.getItem('grimoire_v18_final') || '[]');
 
 function save() {
-    let key = getRecipeKey();
-    let name = nameInput.value.trim();
-    if (!key || !name) return;
-    spells[key] = name;
-    localStorage.setItem('grimoire_mobile_v13', JSON.stringify(spells));
+    const name = nameInput.value.trim();
+    if (!s1.value || !name) { alert("Выберите исток и имя!"); return; }
+
+    const recipeParts = [];
+    const slots = [
+        {val: s1.value, sub: sub1.value},
+        {val: "форма", sub: sub_f.value},
+        {val: s3.value, sub: sub3.value},
+        {val: s4.value, sub: sub4.value},
+        {val: s5.value, sub: sub5.value}
+    ];
+
+    slots.forEach(slot => {
+        if (slot.val) {
+            let text = slot.val;
+            if (slot.sub && slot.sub.trim()) text += ` <span class="rune-detail">(${slot.sub.trim()})</span>`;
+            recipeParts.push(text);
+        }
+    });
+
+    spells.push({ name, recipe: recipeParts.join(" + ") });
+    localStorage.setItem('grimoire_v18_final', JSON.stringify(spells));
     render();
 }
 
+function render() {
+    list.innerHTML = spells.length ? "" : "<center style='color:#5f6368;'>Книга пуста</center>";
+    [...spells].reverse().forEach(s => {
+        list.innerHTML += `<div class="spell-item">
+            <span class="spell-name">${s.name}</span>
+            <span class="spell-recipe">${s.recipe}</span>
+        </div>`;
+    });
+}
+
 function clearAll() {
-    if (confirm("Очистить Гримуар?")) {
-        spells = {};
-        localStorage.removeItem('grimoire_mobile_v13');
-        render(); update(); nameInput.value = "";
+    if (confirm("Удалить записи?")) {
+        spells = [];
+        localStorage.removeItem('grimoire_v18_final');
+        render();
     }
 }
 
-function render() {
-    let entries = Object.entries(spells);
-    list.innerHTML = entries.length ? "" : "<center style='color:#5f6368;'>Книга пуста</center>";
-    entries.reverse().forEach(([recipe, name]) => {
-        list.innerHTML += `<div class="spell-item"><span class="spell-name">${name}</span><span class="spell-recipe">${recipe}</span></div>`;
-    });
+function update() {
+    saveBtn.disabled = !s1.value;
 }
 
 render(); update();
