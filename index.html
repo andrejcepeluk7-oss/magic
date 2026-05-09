@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Гримуар: Магический Конструктор</title>
 <style>
-    /* Базовые настройки и адаптивность */
+    /* Базовые настройки */
     body { 
         font-family: "Comic Sans MS", "Comic Sans", cursive; 
         background: #1a1b1e; 
@@ -49,9 +49,7 @@
         cursor: default;
     }
 
-    select { cursor: pointer; }
-
-    /* Поле ввода названия */
+    /* Поле ввода названия (ЦВЕТ ИСПРАВЛЕН) */
     .result-box { 
         padding: 15px; 
         border-radius: 14px; 
@@ -67,12 +65,16 @@
         border-radius: 8px; 
         border: 1px solid #4a4d52; 
         background: #202124; 
-        color: #ffab40; 
+        color: #e8eaed; /* Спокойный светлый цвет вместо рыжего */
         text-align: center; 
         font-size: 18px; 
         font-weight: bold; 
         outline: none; 
         box-sizing: border-box;
+    }
+
+    input[type="text"]::placeholder {
+        color: #5f6368;
     }
 
     /* Кнопки */
@@ -102,33 +104,35 @@
         padding: 5px;
     }
 
-    /* Список заклинаний */
-    .discovered, .handbook { 
-        padding: 15px; 
-        border-radius: 14px; 
-        background: #2d2f33; 
-        border: 1px solid #3c4043; 
+    /* Выдвижные секции */
+    details { background: #202124; border-radius: 14px; border: 1px solid #3c4043; overflow: hidden; }
+    summary { 
+        padding: 14px; 
+        cursor: pointer; 
+        font-weight: bold; 
+        text-align: center; 
+        list-style: none; 
+        outline: none; 
+        background: #2d2f33;
+        text-transform: uppercase;
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: #9aa0a6;
     }
     
-    h3 { margin: 0 0 12px 0; font-size: 14px; font-weight: normal; color: #9aa0a6; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+    .info-content, .list-content { padding: 15px; font-size: 14px; border-top: 1px solid #3c4043; line-height: 1.5; }
 
+    /* Список заклинаний */
     .spell-item { 
         margin-bottom: 10px; 
         padding-bottom: 10px; 
         border-bottom: 1px solid #3c4043; 
     }
-    .spell-name { color: #ffab40; font-size: 17px; font-weight: bold; display: block; }
+    .spell-name { color: #ffffff; font-size: 17px; font-weight: bold; display: block; }
     .spell-recipe { color: #9aa0a6; font-size: 12px; display: block; margin-top: 3px; font-style: italic; }
 
-    /* Справочник (как в оригинале) */
-    details { background: #202124; border-radius: 8px; border: 1px solid #3c4043; overflow: hidden; }
-    summary { padding: 14px; cursor: pointer; font-weight: bold; text-align: center; list-style: none; outline: none; }
-    .info-content { padding: 15px; font-size: 14px; border-top: 1px solid #3c4043; line-height: 1.5; }
-    
-    /* Стили для строк внутри справочника */
     .info-content div { margin-bottom: 12px; border-bottom: 1px solid #2d2f33; padding-bottom: 8px; }
     .info-content div:last-child { margin-bottom: 0; border-bottom: none; }
-    .info-content strong { color: #e8eaed; }
     
     @media (max-width: 400px) {
         body { padding: 8px; }
@@ -151,25 +155,27 @@
 
     <div class="btn-row">
         <button id="saveBtn" class="save-btn" onclick="save()">Сохранить формулу</button>
-        <button class="trash-btn" onclick="clearAll()" title="Очистить всё">🗑️</button>
+        <button class="trash-btn" onclick="clearAll()">🗑️</button>
     </div>
 
     <div class="discovered">
-        <h3>Гримуар</h3>
-        <div id="list"></div>
+        <details open>
+            <summary>Гримуар</summary>
+            <div id="list" class="list-content"></div>
+        </details>
     </div>
 
     <div class="handbook">
         <details>
             <summary>Справочник основ</summary>
             <div class="info-content">
-                <div><strong>Форма:</strong> определяет внешний вид и физическую структуру заклинания.</div>
-                <div><strong>Движение:</strong> задаёт вектор, траекторию и направление перемещения магии.</div>
-                <div><strong>Мощность:</strong> отвечает за интенсивность, силу воздействия и разрушительный потенциал.</div>
-                <div><strong>Температура:</strong> регулирует тепловые свойства (холодный огонь или горячий лёд).</div>
-                <div><strong>Состояние:</strong> определяет агрегатную форму материи (твердая, жидкая или газообразная).</div>
-                <div><strong>Создание:</strong> руна-катализатор. Позволяет воплощать объекты или провоцировать сложные процессы (например, взрыв).</div>
-                <div><strong>Стихия:</strong> универсальная руна. Позволяет комбинировать или замещать любые стихийные потоки.</div>
+                <div><strong>Форма:</strong> определяет структуру и вид заклинания.</div>
+                <div><strong>Движение:</strong> задаёт вектор и путь перемещения магии.</div>
+                <div><strong>Мощность:</strong> отвечает за силу и интенсивность воздействия.</div>
+                <div><strong>Температура:</strong> регулирует тепловые свойства объекта.</div>
+                <div><strong>Состояние:</strong> определяет форму материи (твердая, жидкая, газ).</div>
+                <div><strong>Создание:</strong> катализатор воплощения объектов или процессов.</div>
+                <div><strong>Стихия:</strong> универсальный заменитель или комбинатор стихий.</div>
             </div>
         </details>
     </div>
@@ -195,9 +201,9 @@ function fillCategorizedOptions(sel, placeholder, essenceList, baseList) {
 }
 
 fillCategorizedOptions(s1, "Выберите исток", essences, ["стихия"]); 
-fillCategorizedOptions(s3, "добавить руну (пусто)", essences, bases);
-fillCategorizedOptions(s4, "добавить руну (пусто)", essences, bases);
-fillCategorizedOptions(s5, "добавить руну (пусто)", essences, bases);
+fillCategorizedOptions(s3, "добавить руну", essences, bases);
+fillCategorizedOptions(s4, "добавить руну", essences, bases);
+fillCategorizedOptions(s5, "добавить руну", essences, bases);
 
 let spells = JSON.parse(localStorage.getItem('grimoire_mobile_v13') || '{}');
 
@@ -221,15 +227,14 @@ function update() {
 function save() {
     let key = getRecipeKey();
     let name = nameInput.value.trim();
-    if (!key) return;
-    if (!name) { alert("Магия требует имени!"); return; }
+    if (!key || !name) return;
     spells[key] = name;
     localStorage.setItem('grimoire_mobile_v13', JSON.stringify(spells));
     render();
 }
 
 function clearAll() {
-    if (confirm("Удалить все записи из гримуара?")) {
+    if (confirm("Очистить Гримуар?")) {
         spells = {};
         localStorage.removeItem('grimoire_mobile_v13');
         render(); update(); nameInput.value = "";
@@ -238,13 +243,9 @@ function clearAll() {
 
 function render() {
     let entries = Object.entries(spells);
-    list.innerHTML = entries.length ? "" : "<center style='color:#5f6368; font-size: 14px;'>Книга пуста</center>";
+    list.innerHTML = entries.length ? "" : "<center style='color:#5f6368;'>Книга пуста</center>";
     entries.reverse().forEach(([recipe, name]) => {
-        list.innerHTML += `
-            <div class="spell-item">
-                <span class="spell-name">${name}</span>
-                <span class="spell-recipe">${recipe}</span>
-            </div>`;
+        list.innerHTML += `<div class="spell-item"><span class="spell-name">${name}</span><span class="spell-recipe">${recipe}</span></div>`;
     });
 }
 
