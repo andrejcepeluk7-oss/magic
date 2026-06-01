@@ -70,6 +70,9 @@ function fillOptions() {
         let html = `<option value="">Выберите руну</option>`;
         
         for (let g in groups) {
+            // Условие: если это первый селектор (id="s1") и группа называется "Руны основ" — пропускаем её
+            if (sel.id === 's1' && g === "Руны основ") continue;
+
             html += `<optgroup label="${g}">`;
             let free = groups[g].filter(r => freeRunes.includes(r) || unlockedRunes.includes(r)).sort();
             let locked = groups[g].filter(r => !freeRunes.includes(r) && !unlockedRunes.includes(r)).sort();
