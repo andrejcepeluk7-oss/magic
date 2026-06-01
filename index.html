@@ -5,157 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Гримуар: Магический Конструктор</title>
 <style>
-    body { 
-        font-family: "Comic Sans MS", "Comic Sans", cursive; 
-        background: #1a1b1e; 
-        color: #e8eaed; 
-        margin: 0; 
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-    }
-    
-    .container { 
-        width: 100%;
-        max-width: 450px; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 12px; 
-        padding-top: 10px; 
-    }
-    
-    .rune-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        background: #25262b;
-        padding: 8px;
-        border-radius: 14px;
-        border: 1px solid #3c4043;
-    }
-
-    select, .fixed-rune { 
-        font-family: "Comic Sans MS", cursive;
-        padding: 12px; 
-        border-radius: 10px; 
-        border: 1px solid #3c4043; 
-        background: #303134; 
-        color: white; 
-        font-size: 16px; 
-        width: 100%; 
-        box-sizing: border-box; 
-        outline: none; 
-        -webkit-appearance: none; 
-    }
-    
+    * { box-sizing: border-box; }
+    body { font-family: "Comic Sans MS", "Comic Sans", cursive; background: #1a1b1e; color: #e8eaed; margin: 0; padding: 10px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 12px; }
+    .rune-group { display: flex; flex-direction: column; gap: 5px; background: #25262b; padding: 8px; border-radius: 14px; border: 1px solid #3c4043; }
+    select, .fixed-rune, input { font-family: "Comic Sans MS", cursive; padding: 12px; border-radius: 10px; border: 1px solid #3c4043; background: #303134; color: white; font-size: 16px; width: 100%; outline: none; -webkit-appearance: none; }
     .fixed-rune { background: #1a1b1e; border: 1px solid #4a4d52; text-align: center; }
-
-    .sub-input {
-        font-family: "Comic Sans MS", cursive;
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 6px;
-        border: 1px solid #3c4043;
-        background: #202124;
-        color: #e8eaed;
-        font-size: 13px;
-        box-sizing: border-box;
-        outline: none;
-        display: none; /* Скрыто по умолчанию */
-    }
-
-    .result-box { 
-        padding: 15px; 
-        border-radius: 14px; 
-        background: #2d2f33; 
-        border: 2px dashed #4a4d52; 
-        text-align: center; 
-    }
-    
-    input[id="nameInput"] { 
-        font-family: "Comic Sans MS", cursive;
-        width: 100%; 
-        padding: 12px; 
-        border-radius: 8px; 
-        border: 1px solid #4a4d52; 
-        background: #202124; 
-        color: #e8eaed; 
-        text-align: center; 
-        font-size: 18px; 
-        font-weight: bold; 
-        outline: none; 
-        box-sizing: border-box;
-    }
-
-    .btn-row { display: flex; gap: 10px; align-items: center; }
-    .save-btn { 
-        font-family: "Comic Sans MS", cursive; 
-        flex: 1; padding: 16px; border-radius: 12px; border: none; 
-        background: #3a3d42; color: white; font-weight: bold; cursor: pointer; 
-        font-size: 16px; transition: 0.2s;
-    }
-    .save-btn:disabled { opacity: 0.2; }
-    
-    .trash-btn { background: none; border: none; font-size: 32px; cursor: pointer; filter: grayscale(1); padding: 5px; }
-
-    details { background: #202124; border-radius: 14px; border: 1px solid #3c4043; overflow: hidden; }
-    summary { 
-        padding: 14px; cursor: pointer; font-weight: bold; text-align: center; 
-        list-style: none; background: #2d2f33; text-transform: uppercase;
-        font-size: 13px; letter-spacing: 2px; color: #9aa0a6;
-    }
-    
-    .list-content, .info-content { padding: 15px; border-top: 1px solid #3c4043; }
-
-    .spell-item { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #3c4043; }
-    .spell-name { color: #ffffff; font-size: 17px; font-weight: bold; display: block; }
-    .spell-recipe { color: #9aa0a6; font-size: 12px; display: block; margin-top: 4px; line-height: 1.4; font-style: italic; }
-    .rune-detail { color: #9aa0a6; font-style: normal; font-weight: normal; }
-
-    .info-content div { margin-bottom: 10px; font-size: 14px; border-bottom: 1px solid #2d2f33; padding-bottom: 5px; }
+    .sub-input { background: #202124; font-size: 13px; display: none; }
+    .result-box { padding: 10px; background: #2d2f33; border-radius: 14px; border: 2px dashed #4a4d52; }
+    .btn-row { display: flex; gap: 10px; }
+    .save-btn { flex: 1; padding: 16px; border: none; border-radius: 12px; background: #3a3d42; color: white; font-weight: bold; cursor: pointer; }
+    .trash-btn { background: #303134; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; padding: 0 15px; }
+    details { background: #202124; border-radius: 14px; border: 1px solid #3c4043; }
+    summary { padding: 14px; cursor: pointer; font-weight: bold; text-align: center; color: #9aa0a6; text-transform: uppercase; font-size: 13px; }
+    .spell-item { padding: 12px; border-bottom: 1px solid #3c4043; font-size: 15px; }
+    .info-content { padding: 15px; border-top: 1px solid #3c4043; font-size: 14px; }
+    .info-content div { margin-bottom: 8px; border-bottom: 1px solid #2d2f33; padding-bottom: 4px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="rune-group">
-        <select id="s1" onchange="toggleSub(this, 'sub1')"></select>
-        <input type="text" id="sub1" class="sub-input" placeholder="Суть истока (если выбрана Стихия)...">
-    </div>
+    <div class="rune-group"><select id="s1" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub1');"></select><input type="text" id="sub1" class="sub-input" placeholder="Суть истока..."></div>
+    <div class="rune-group"><div class="fixed-rune">ФОРМА</div><input type="text" id="sub_f" class="sub-input" style="display:block" placeholder="Описание формы..."></div>
+    <div class="rune-group"><select id="s3" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub3');"></select><input type="text" id="sub3" class="sub-input" placeholder="Свойство..."></div>
+    <div class="rune-group"><select id="s4" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub4');"></select><input type="text" id="sub4" class="sub-input" placeholder="Свойство..."></div>
+    <div class="rune-group"><select id="s5" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub5');"></select><input type="text" id="sub5" class="sub-input" placeholder="Свойство..."></div>
 
-    <div class="rune-group">
-        <div class="fixed-rune">форма</div>
-        <input type="text" id="sub_f" class="sub-input" style="display:block" placeholder="Описание формы...">
-    </div>
+    <div class="result-box"><input type="text" id="nameInput" placeholder="Название заклинания..."></div>
+    <div class="btn-row"><button class="save-btn" onclick="saveToGrimoire()">Записать</button><button class="trash-btn" onclick="clearData()">🗑️</button></div>
 
-    <div class="rune-group">
-        <select id="s3" onchange="toggleSub(this, 'sub3')"></select>
-        <input type="text" id="sub3" class="sub-input" placeholder="Свойство основы...">
-    </div>
-
-    <div class="rune-group">
-        <select id="s4" onchange="toggleSub(this, 'sub4')"></select>
-        <input type="text" id="sub4" class="sub-input" placeholder="Свойство основы...">
-    </div>
-
-    <div class="rune-group">
-        <select id="s5" onchange="toggleSub(this, 'sub5')"></select>
-        <input type="text" id="sub5" class="sub-input" placeholder="Свойство основы...">
-    </div>
-
-    <div class="result-box">
-        <input type="text" id="nameInput" placeholder="Название заклинания..." autocomplete="off">
-    </div>
-
-    <div class="btn-row">
-        <button id="saveBtn" class="save-btn" onclick="save()">Записать в Гримуар</button>
-        <button class="trash-btn" onclick="clearAll()">🗑️</button>
-    </div>
-
-    <details>
-        <summary>Гримуар</summary>
-        <div id="list" class="list-content"></div>
-    </details>
+    <details><summary>Гримуар</summary><div id="list"></div></details>
 
     <details>
         <summary>Справочник основ</summary>
@@ -172,95 +52,72 @@
 </div>
 
 <script>
-const essences = ["огонь", "вода", "воздух", "Земля", "металл", "яд", "молния"].sort();
-const bases = ["движение", "мощность", "температура", "состояние", "создание", "стихия"].sort();
+const UNLOCK_CODE = "1337";
+let unlockedRunes = JSON.parse(localStorage.getItem('unlockedRunes') || '[]');
+let grimoire = JSON.parse(localStorage.getItem('grimoire') || '[]');
 
-function fillOptions(sel, placeholder, essenceList, baseList) {
-    let html = `<option value="">${placeholder}</option>`;
-    if (essenceList) {
-        html += `<optgroup label="Стихии">`;
-        essenceList.forEach(item => html += `<option value="${item}">${item}</option>`);
-        html += `</optgroup>`;
-    }
-    if (baseList) {
-        html += `<optgroup label="Основы">`;
-        baseList.forEach(item => html += `<option value="${item}">${item}</option>`);
-        html += `</optgroup>`;
-    }
-    sel.innerHTML = html;
-}
+const groups = {
+    "Руны основ": ["движение", "прочность", "температура", "расширение", "сжатие", "время", "состояние", "именная руна", "создание", "событие", "рост", "стихия"],
+    "Простые руны": ["огонь", "вода", "воздух", "земля", "металл", "яд", "молния", "некромантия", "восстановление тканей", "природа", "иллюзия", "слизь", "грибы", "материя магии", "взрыв"],
+    "Мощные руны": ["смерть", "кровь", "золото", "пространство", "пустота", "жизнь", "свет", "тьма", "гравитация"]
+};
 
-// ЛОГИКА: Поле появляется только если выбрана руна из списка 'bases' (Основы + общая Стихия)
-function toggleSub(sel, subId) {
-    const sub = document.getElementById(subId);
-    const val = sel.value;
-    
-    // Проверяем, входит ли значение в список основ
-    if (val && bases.includes(val)) {
-        sub.style.display = "block";
-    } else {
-        sub.style.display = "none";
-        sub.value = "";
-    }
-    update();
-}
+const freeRunes = ["огонь", "вода", "воздух", "земля", "металл", "яд", "молния", "движение", "температура", "состояние", "создание", "стихия"];
 
-fillOptions(s1, "Выберите исток", essences, ["стихия"]); 
-fillOptions(s3, "(пусто)", essences, bases);
-fillOptions(s4, "(пусто)", essences, bases);
-fillOptions(s5, "(пусто)", essences, bases);
-
-let spells = JSON.parse(localStorage.getItem('grimoire_v18_final') || '[]');
-
-function save() {
-    const name = nameInput.value.trim();
-    if (!s1.value || !name) { alert("Выберите исток и имя!"); return; }
-
-    const recipeParts = [];
-    const slots = [
-        {val: s1.value, sub: sub1.value},
-        {val: "форма", sub: sub_f.value},
-        {val: s3.value, sub: sub3.value},
-        {val: s4.value, sub: sub4.value},
-        {val: s5.value, sub: sub5.value}
-    ];
-
-    slots.forEach(slot => {
-        if (slot.val) {
-            let text = slot.val;
-            if (slot.sub && slot.sub.trim()) text += ` <span class="rune-detail">(${slot.sub.trim()})</span>`;
-            recipeParts.push(text);
+function fillOptions() {
+    document.querySelectorAll('.rune-sel').forEach(sel => {
+        let current = sel.value;
+        let html = `<option value="">Выберите руну</option>`;
+        
+        for (let g in groups) {
+            html += `<optgroup label="${g}">`;
+            let free = groups[g].filter(r => freeRunes.includes(r) || unlockedRunes.includes(r)).sort();
+            let locked = groups[g].filter(r => !freeRunes.includes(r) && !unlockedRunes.includes(r)).sort();
+            
+            free.forEach(r => html += `<option value="${r}">${r}</option>`);
+            locked.forEach(r => html += `<option value="${r}" style="color:gray">${r} 🔒</option>`);
+            
+            html += `</optgroup>`;
         }
-    });
-
-    spells.push({ name, recipe: recipeParts.join(" + ") });
-    localStorage.setItem('grimoire_v18_final', JSON.stringify(spells));
-    render();
-}
-
-function render() {
-    list.innerHTML = spells.length ? "" : "<center style='color:#5f6368;'>Книга пуста</center>";
-    [...spells].reverse().forEach(s => {
-        list.innerHTML += `<div class="spell-item">
-            <span class="spell-name">${s.name}</span>
-            <span class="spell-recipe">${s.recipe}</span>
-        </div>`;
+        sel.innerHTML = html;
+        sel.value = current;
     });
 }
 
-function clearAll() {
-    if (confirm("Удалить записи?")) {
-        spells = [];
-        localStorage.removeItem('grimoire_v18_final');
-        render();
+function checkAccess(sel) {
+    if (!freeRunes.includes(sel.value) && !unlockedRunes.includes(sel.value) && sel.value !== "") {
+        const pass = prompt("Введите код разблокировки:");
+        if (pass === UNLOCK_CODE) {
+            unlockedRunes.push(sel.value);
+            localStorage.setItem('unlockedRunes', JSON.stringify(unlockedRunes));
+            fillOptions();
+            alert("Руна разблокирована!");
+        } else { sel.value = ""; }
     }
 }
 
-function update() {
-    saveBtn.disabled = !s1.value;
+function toggleSub(sel, subId) { document.getElementById(subId).style.display = sel.value ? "block" : "none"; }
+
+function saveToGrimoire() {
+    const name = document.getElementById('nameInput').value || "Без названия";
+    grimoire.push(name);
+    localStorage.setItem('grimoire', JSON.stringify(grimoire));
+    renderGrimoire();
 }
 
-render(); update();
+function renderGrimoire() {
+    document.getElementById('list').innerHTML = grimoire.map(s => `<div class="spell-item">✨ ${s}</div>`).join('');
+}
+
+function clearData() {
+    if (confirm("Вы уверены, что хотите очистить всё?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+fillOptions();
+renderGrimoire();
 </script>
 </body>
 </html>
