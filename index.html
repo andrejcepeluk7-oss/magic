@@ -2,125 +2,502 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Гримуар: Магический Конструктор</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Гримуар</title>
+
 <style>
-    * { box-sizing: border-box; }
-    body { font-family: "Comic Sans MS", "Comic Sans", cursive; background: #1a1b1e; color: #e8eaed; margin: 0; padding: 10px; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 12px; }
-    .rune-group { display: flex; flex-direction: column; gap: 5px; background: #25262b; padding: 8px; border-radius: 14px; border: 1px solid #3c4043; }
-    select, .fixed-rune, input { font-family: "Comic Sans MS", cursive; padding: 12px; border-radius: 10px; border: 1px solid #3c4043; background: #303134; color: white; font-size: 16px; width: 100%; outline: none; -webkit-appearance: none; }
-    .fixed-rune { background: #1a1b1e; border: 1px solid #4a4d52; text-align: center; }
-    .sub-input { background: #202124; font-size: 13px; display: none; }
-    .result-box { padding: 10px; background: #2d2f33; border-radius: 14px; border: 2px dashed #4a4d52; }
-    .btn-row { display: flex; gap: 10px; }
-    .save-btn { flex: 1; padding: 16px; border: none; border-radius: 12px; background: #3a3d42; color: white; font-weight: bold; cursor: pointer; }
-    .trash-btn { background: #303134; border: none; border-radius: 12px; font-size: 24px; cursor: pointer; padding: 0 15px; }
-    details { background: #202124; border-radius: 14px; border: 1px solid #3c4043; }
-    summary { padding: 14px; cursor: pointer; font-weight: bold; text-align: center; color: #9aa0a6; text-transform: uppercase; font-size: 13px; }
-    .spell-item { padding: 12px; border-bottom: 1px solid #3c4043; font-size: 15px; }
-    .info-content { padding: 15px; border-top: 1px solid #3c4043; font-size: 14px; }
-    .info-content div { margin-bottom: 8px; border-bottom: 1px solid #2d2f33; padding-bottom: 4px; }
+*{
+box-sizing:border-box;
+font-family:"Comic Sans MS","Comic Sans",cursive;
+}
+body{
+font-family:"Comic Sans MS",cursive;
+background:#1a1b1e;
+color:#e8eaed;
+margin:0;
+padding:10px;
+display:flex;
+justify-content:center;
+}
+
+.container{width:100%;max-width:450px}
+.page{display:none}
+.page.active{display:block}
+
+.rune-group{
+display:flex;
+flex-direction:column;
+gap:5px;
+background:#25262b;
+padding:8px;
+border-radius:14px;
+border:1px solid #3c4043;
+margin-bottom:10px;
+}
+
+select,.fixed-rune,input{
+font-family:"Comic Sans MS",cursive;
+padding:12px;
+border-radius:10px;
+border:1px solid #3c4043;
+background:#303134;
+color:white;
+font-size:20px;
+width:100%;
+}
+
+.fixed-rune{
+background:#1a1b1e;
+text-align:center;
+}
+
+.sub-input{
+background:#202124;
+font-size:13px;
+display:none;
+}
+
+.result-box{
+padding:10px;
+background:#2d2f33;
+border-radius:14px;
+border:2px dashed #4a4d52;
+margin-bottom:10px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+background:#3a3d42;
+color:white;
+cursor:pointer;
+width:100%;
+margin-bottom:10px;
+}
+
+.nav{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.spell-item{
+padding:12px;
+border-bottom:1px solid #3c4043;
+display:flex;
+justify-content:space-between;
+cursor:pointer;
+}
+
+.stat-box{
+background:#25262b;
+padding:12px;
+border-radius:14px;
+margin-bottom:12px;
+}
+
+button,
+input,
+select,
+summary,
+details,
+.spell-item,
+.stat-box{
+font-size:20px !important;
+}
+
+.bottom-buttons{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.bottom-buttons button{
+margin-bottom:0;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="rune-group"><select id="s1" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub1');"></select><input type="text" id="sub1" class="sub-input" placeholder="Суть истока..."></div>
-    <div class="rune-group"><div class="fixed-rune">ФОРМА</div><input type="text" id="sub_f" class="sub-input" style="display:block" placeholder="Описание формы..."></div>
-    <div class="rune-group"><select id="s3" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub3');"></select><input type="text" id="sub3" class="sub-input" placeholder="Свойство..."></div>
-    <div class="rune-group"><select id="s4" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub4');"></select><input type="text" id="sub4" class="sub-input" placeholder="Свойство..."></div>
-    <div class="rune-group"><select id="s5" class="rune-sel" onchange="checkAccess(this); toggleSub(this, 'sub5');"></select><input type="text" id="sub5" class="sub-input" placeholder="Свойство..."></div>
 
-    <div class="result-box"><input type="text" id="nameInput" placeholder="Название заклинания..."></div>
-    <div class="btn-row"><button class="save-btn" onclick="saveToGrimoire()">Записать</button><button class="trash-btn" onclick="clearData()">🗑️</button></div>
+<div class="nav">
+<button onclick="showPage('page1')">Создание</button>
+<button onclick="showPage('page2')">Гримуар</button>
+</div>
 
-    <details><summary>Гримуар</summary><div id="list"></div></details>
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
 
-    <details>
-        <summary>Справочник основ</summary>
-        <div class="info-content">
-            <div><strong>Форма:</strong> структура и вид заклинания.</div>
-            <div><strong>Движение:</strong> вектор и путь перемещения.</div>
-            <div><strong>Мощность:</strong> сила воздействия.</div>
-            <div><strong>Температура:</strong> тепловые свойства.</div>
-            <div><strong>Состояние:</strong> твердое, жидкое или газ.</div>
-            <div><strong>Создание:</strong> катализатор воплощения.</div>
-            <div><strong>Стихия:</strong> универсальный комбинатор.</div>
-        </div>
-    </details>
+<div class="rune-group">
+<select id="s1" class="rune-sel" onchange="checkAccess(this);toggleSub(this,'sub1');updateCost()"></select>
+<input id="sub1" class="sub-input" placeholder="Суть истока...">
+</div>
+
+<div class="rune-group">
+<div class="fixed-rune">ФОРМА</div>
+<input id="subf" class="sub-input" style="display:block" placeholder="Описание формы...">
+</div>
+
+<div class="rune-group">
+<select id="s3" class="rune-sel" onchange="checkAccess(this);toggleSub(this,'sub3');updateCost()"></select>
+<input id="sub3" class="sub-input" placeholder="Свойство...">
+</div>
+
+<div class="rune-group">
+<select id="s4" class="rune-sel" onchange="checkAccess(this);toggleSub(this,'sub4');updateCost()"></select>
+<input id="sub4" class="sub-input" placeholder="Свойство...">
+</div>
+
+<div class="rune-group">
+<select id="s5" class="rune-sel" onchange="checkAccess(this);toggleSub(this,'sub5');updateCost()"></select>
+<input id="sub5" class="sub-input" placeholder="Свойство...">
+</div>
+
+<div class="result-box">
+<input id="nameInput" placeholder="Название заклинания...">
+Цена: <span id="spellCost">0</span>
+</div>
+
+<button onclick="saveSpell()">Записать</button>
+
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+
+<div class="stat-box">
+
+<div style="margin-bottom:10px;">
+Мудрость:
+<input id="wisdom" type="number" value="10" onchange="updateAll()">
+</div>
+
+<div style="margin-bottom:10px;">
+Мана:
+<span id="mana">10</span> /
+<span id="maxMana">10</span>
+</div>
+
+<div style="margin-bottom:10px;">
+Интеллект:
+<input id="intellect" type="number" value="1" onchange="updateAll()">
+</div>
+
+<div>
+Цена текущего заклинания:
+<span id="currentSpellCost">0</span>
+</div>
+
+</div>
+
+<details>
+<summary>Гримуар</summary>
+<div id="grimoire"></div>
+</details>
+
+<div class="bottom-buttons">
+    <button onclick="restMana()">Отдохнуть</button>
+    <button onclick="clearData()">Очистить всё</button>
+</div>
+
+</div>
+
 </div>
 
 <script>
-const UNLOCK_CODE = "1337";
-let unlockedRunes = JSON.parse(localStorage.getItem('unlockedRunes') || '[]');
-let grimoire = JSON.parse(localStorage.getItem('grimoire') || '[]');
-
-const groups = {
-    "Руны основ": ["движение", "прочность", "температура", "расширение", "сжатие", "время", "состояние", "именная руна", "создание", "событие", "рост", "стихия"],
-    "Простые руны": ["огонь", "вода", "воздух", "земля", "металл", "яд", "молния", "некромантия", "восстановление тканей", "природа", "иллюзия", "слизь", "грибы", "материя магии", "взрыв"],
-    "Мощные руны": ["смерть", "кровь", "золото", "пространство", "пустота", "жизнь", "свет", "тьма", "гравитация"]
+const runeCosts={
+"движение":2,"прочность":3,"температура":2,"расширение":3,"сжатие":3,"время":6,
+"состояние":2,"именная руна":4,"создание":3,"событие":4,"рост":4,"стихия":5,
+"огонь":2,"вода":2,"воздух":2,"земля":2,"металл":3,"яд":3,"молния":4,
+"некромантия":6,"восстановление тканей":5,"природа":4,"иллюзия":3,"слизь":2,
+"грибы":2,"материя магии":5,"взрыв":5,"смерть":8,"кровь":5,"золото":7,
+"пространство":8,"пустота":10,"жизнь":8,"свет":6,"тьма":6,"гравитация":7
 };
 
-const freeRunes = ["огонь", "вода", "воздух", "земля", "металл", "яд", "молния", "движение", "температура", "состояние", "создание", "стихия"];
+const groups={
+"Руны основ":["движение","прочность","температура","расширение","сжатие","время","состояние","именная руна","создание","событие","рост","стихия"],
+"Простые руны":["огонь","вода","воздух","земля","металл","яд","молния","некромантия","восстановление тканей","природа","иллюзия","слизь","грибы","материя магии","взрыв"],
+"Мощные руны":["смерть","кровь","золото","пространство","пустота","жизнь","свет","тьма","гравитация"]
+};
+
+const UNLOCK_CODE = "13101";
+
+let unlockedRunes = JSON.parse(
+localStorage.getItem('unlockedRunes') || '[]'
+);
+
+const freeRunes = [
+"огонь","вода","воздух","земля",
+"металл","яд","молния",
+"движение","температура",
+"состояние","создание","стихия"
+];
+
+let grimoire=JSON.parse(localStorage.getItem("grimoire")||"[]");
+
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+function toggleSub(sel,id){
+document.getElementById(id).style.display=sel.value?"block":"none";
+}
 
 function fillOptions() {
     document.querySelectorAll('.rune-sel').forEach(sel => {
         let current = sel.value;
+
         let html = `<option value="">Выберите руну</option>`;
-        
+
         for (let g in groups) {
-            // Условие: если это первый селектор (id="s1") и группа называется "Руны основ" — пропускаем её
-            if (sel.id === 's1' && g === "Руны основ") continue;
+
+            if (sel.id === 's1' && g === "Руны основ")
+                continue;
 
             html += `<optgroup label="${g}">`;
-            let free = groups[g].filter(r => freeRunes.includes(r) || unlockedRunes.includes(r)).sort();
-            let locked = groups[g].filter(r => !freeRunes.includes(r) && !unlockedRunes.includes(r)).sort();
-            
-            free.forEach(r => html += `<option value="${r}">${r}</option>`);
-            locked.forEach(r => html += `<option value="${r}" style="color:gray">${r} 🔒</option>`);
-            
+
+            let free = groups[g]
+                .filter(r =>
+                    freeRunes.includes(r) ||
+                    unlockedRunes.includes(r)
+                )
+                .sort();
+
+            let locked = groups[g]
+                .filter(r =>
+                    !freeRunes.includes(r) &&
+                    !unlockedRunes.includes(r)
+                )
+                .sort();
+
+            free.forEach(r => {
+                html += `<option value="${r}">${r}</option>`;
+            });
+
+            locked.forEach(r => {
+                html += `<option value="${r}" style="color:gray">${r} 🔒</option>`;
+            });
+
             html += `</optgroup>`;
         }
+
         sel.innerHTML = html;
         sel.value = current;
     });
 }
 
 function checkAccess(sel) {
-    if (!freeRunes.includes(sel.value) && !unlockedRunes.includes(sel.value) && sel.value !== "") {
+
+    if (
+        !freeRunes.includes(sel.value) &&
+        !unlockedRunes.includes(sel.value) &&
+        sel.value !== ""
+    ) {
+
         const pass = prompt("Введите код разблокировки:");
+
         if (pass === UNLOCK_CODE) {
+
             unlockedRunes.push(sel.value);
-            localStorage.setItem('unlockedRunes', JSON.stringify(unlockedRunes));
+
+            localStorage.setItem(
+                'unlockedRunes',
+                JSON.stringify(unlockedRunes)
+            );
+
             fillOptions();
+
             alert("Руна разблокирована!");
-        } else { sel.value = ""; }
+
+        } else {
+
+            sel.value = "";
+        }
     }
 }
 
-function toggleSub(sel, subId) { document.getElementById(subId).style.display = sel.value ? "block" : "none"; }
+let currentMana = 0;
 
-function saveToGrimoire() {
-    const name = document.getElementById('nameInput').value || "Без названия";
-    grimoire.push(name);
-    localStorage.setItem('grimoire', JSON.stringify(grimoire));
+function getMaxMana(){
+    return (parseInt(wisdom.value) || 0) * 2;
+}
+
+function getDiscount(intel){
+
+    if(intel <= 2) return 0;
+    if(intel <= 4) return 0.05;
+    if(intel <= 6) return 0.10;
+    if(intel <= 8) return 0.20;
+    if(intel <= 10) return 0.30;
+    if(intel <= 12) return 0.40;
+    if(intel <= 14) return 0.50;
+    if(intel <= 16) return 0.60;
+    if(intel <= 18) return 0.70;
+    if(intel == 19) return 0.75;
+
+    return 0.80;
+}
+
+function getCost(runes){
+
+    let baseCost = 0;
+
+    runes.forEach(r=>{
+        baseCost += runeCosts[r] || 0;
+    });
+
+    let intel =
+        parseInt(intellect.value) || 1;
+
+    let discount =
+        getDiscount(intel);
+
+    let finalCost =
+        baseCost * (1 - discount);
+
+    return Math.max(
+        1,
+        Math.ceil(finalCost)
+    );
+}
+
+function updateCost(){
+
+    const runes = [
+        s1.value,
+        s3.value,
+        s4.value,
+        s5.value
+    ].filter(Boolean);
+
+    const cost = getCost(runes);
+
+    spellCost.textContent = cost;
+
+    const currentCost =
+        document.getElementById("currentSpellCost");
+
+    if(currentCost){
+        currentCost.textContent = cost;
+    }
+}
+
+function updateAll(){
+
+    maxMana.textContent = getMaxMana();
+
+    if(currentMana > getMaxMana()){
+        currentMana = getMaxMana();
+    }
+
+    mana.textContent = currentMana;
+
+    const runes = [
+        s1.value,
+        s3.value,
+        s4.value,
+        s5.value
+    ].filter(Boolean);
+
+    const cost = getCost(runes);
+
+    spellCost.textContent = cost;
+    currentSpellCost.textContent = cost;
+
     renderGrimoire();
+
+    localStorage.setItem("wisdom", wisdom.value);
+    localStorage.setItem("intellect", intellect.value);
+    localStorage.setItem("currentMana", currentMana);
 }
 
-function renderGrimoire() {
-    document.getElementById('list').innerHTML = grimoire.map(s => `<div class="spell-item">✨ ${s}</div>`).join('');
+function restMana(){
+
+    currentMana = getMaxMana();
+
+    mana.textContent = currentMana;
+
+    localStorage.setItem(
+        "currentMana",
+        currentMana
+    );
 }
 
-function clearData() {
-    if (confirm("Вы уверены, что хотите очистить всё?")) {
-        localStorage.clear();
-        location.reload();
+function saveSpell(){
+const name=nameInput.value||"Без названия";
+const runes=[s1.value,s3.value,s4.value,s5.value].filter(Boolean);
+
+grimoire.push({name,runes});
+localStorage.setItem("grimoire",JSON.stringify(grimoire));
+renderGrimoire();
+}
+
+function castSpell(i){
+
+    let cost =
+        getCost(grimoire[i].runes);
+
+    if(currentMana < cost){
+
+        alert("Недостаточно маны");
+        return;
     }
+
+    currentMana -= cost;
+
+    mana.textContent = currentMana;
+
+    localStorage.setItem(
+        "currentMana",
+        currentMana
+    );
+}
+
+function renderGrimoire(){
+
+document.getElementById("grimoire").innerHTML =
+grimoire.map((s,i)=>`
+
+<div
+class="spell-item"
+onclick="castSpell(${i})">
+
+<span>${s.name}</span>
+
+<span>
+${getCost(s.runes)}
+</span>
+
+</div>
+
+`).join('');
+
+}
+
+function clearData(){
+localStorage.clear();
+location.reload();
 }
 
 fillOptions();
+
+wisdom.value =
+localStorage.getItem("wisdom") || 10;
+
+intellect.value =
+localStorage.getItem("intellect") || 1;
+
+currentMana =
+parseInt(
+localStorage.getItem("currentMana")
+) || getMaxMana();
+
+updateAll();
 renderGrimoire();
 </script>
+
 </body>
 </html>
